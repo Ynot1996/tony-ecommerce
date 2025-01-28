@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useParams } from 'react-router-dom';
+import { useCart } from '../../contexts/CartContext';
 import { mockProducts } from '../../utils/mockData';
 
 const ProductDetailContainer = styled.div`
@@ -36,15 +37,26 @@ const Button = styled.button`
   cursor: pointer;
 `;
 
+const QuantityControl = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+`;
+
 function ProductDetail() {
   const { id } = useParams();
-  
-  // 使用 id 來獲取商品數據
+  const { addToCart } = useCart();
+  const [quantity, setQuantity] = useState(1);
+
   const product = mockProducts.find(p => p.id === parseInt(id)) || {
     name: "商品名稱",
     price: 999,
     description: "商品描述",
     image: "https://picsum.photos/400/400?random=" + id
+  };
+
+  const handleAddToCart = () => {
+    addToCart(product.id, quantity);
   };
 
   return (
@@ -57,7 +69,12 @@ function ProductDetail() {
           <h2>{product.name}</h2>
           <p>{product.description}</p>
           <p>NT$ {product.price}</p>
-          <Button>加入購物車</Button>
+          <QuantityControl>
+            <button onClick={() => setQuantity(q => Math.max(1, q - 1))}>-</button>
+            <span>{quantity}</span>
+            <button onClick={() => setQuantity(q => q + 1)}>+</button>
+          </QuantityControl>
+          <Button onClick={handleAddToCart}>加入購物車</Button>
         </ProductDetails>
       </ProductInfo>
     </ProductDetailContainer>

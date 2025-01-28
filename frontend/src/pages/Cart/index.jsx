@@ -1,9 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
-import { FaTrash } from '@react-icons/all-files/fa/FaTrash';
-import { FaMinus } from '@react-icons/all-files/fa/FaMinus';
-import { FaPlus } from '@react-icons/all-files/fa/FaPlus';
-import { mockCartItems } from '../../utils/mockData';
+import { FaTrash, FaMinus, FaPlus } from 'react-icons/fa';
+import { useCart } from '../../contexts/CartContext';
+import { useNavigate } from 'react-router-dom';
 
 const CartContainer = styled.div`
   max-width: 1200px;
@@ -88,34 +87,93 @@ const CheckoutButton = styled.button`
   }
 `;
 
+const EmptyCart = styled.div`
+  text-align: center;
+  padding: 2rem;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  margin-top: 2rem;
+
+  h2 {
+    margin-bottom: 1rem;
+  }
+
+  button {
+    padding: 0.75rem 1.5rem;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+      background-color: #0056b3;
+    }
+  }
+`;
+
 function Cart() {
-  const total = mockCartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const { cartItems, updateQuantity, removeFromCart, fetchCart } = useCart();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    fetchCart();
+  }, [fetchCart]);
+
+  const total = cartItems.reduce((sum, item) => 
+    sum + item.price * item.quantity, 0
+  );
+
+  const handleQuantityChange = (productId, currentQuantity, change) => {
+    const newQuantity = currentQuantity + change;
+    if (newQuantity > 0) {
+      updateQuantity(productId, newQuantity);
+    }
+  };
+
+  const handleCheckout = () => {
+    navigate('/checkout');
+  };
 
   return (
     <CartContainer>
-      <h2>購物車</h2>
-      {mockCartItems.map(item => (
-        <CartItem key={item.id}>
-          <ProductImage src={item.image} alt={item.name} />
-          <div>
-            <h3>{item.name}</h3>
-            <p>單價: NT$ {item.price}</p>
-          </div>
-          <QuantityControl>
-            <IconButton><FaMinus /></IconButton>
-            <span>{item.quantity}</span>
-            <IconButton><FaPlus /></IconButton>
-          </QuantityControl>
-          <div>NT$ {item.price * item.quantity}</div>
-          <DeleteButton>
-            <FaTrash />
-          </DeleteButton>
-        </CartItem>
-      ))}
-      <Total>
-        總計: NT$ {total}
-        <CheckoutButton>結帳</CheckoutButton>
-      </Total>
+      {cartItems.length === 0 ? (
+        <EmptyCart>
+          <h2>購物車是空的</h2>
+          <button onClick={() => navigate('/products')}>繼續購物</button>
+        </EmptyCart>
+      ) : (
+        <>
+          {cartItems.map(item => (
+            <CartItem key={item.id}>
+              <ProductImage src={item.product.imageUrl} alt={item.product.name} />
+              <div>
+                <h3>{item.product.name}</h3>
+                <p>單價: NT$ {item.price}</p>
+              </div>
+              <QuantityControl>
+                <IconButton onClick={() => handleQuantityChange(item.product.id, item.quantity, -1)}>
+                  <FaMinus />
+                </IconButton>
+                <span>{item.quantity}</span>
+                <IconButton onClick={() => handleQuantityChange(item.product.id, item.quantity, 1)}>
+                  <FaPlus />
+                </IconButton>
+              </QuantityControl>
+              <div>NT$ {item.price * item.quantity}</div>
+              <DeleteButton onClick={() => removeFromCart(item.product.id)}>
+                <FaTrash />
+              </DeleteButton>
+            </CartItem>
+          ))}
+          <Total>
+            總計: NT$ {total}
+            <CheckoutButton onClick={handleCheckout}>結帳</CheckoutButton>
+          </Total>
+        </>
+      )}
     </CartContainer>
   );
 }

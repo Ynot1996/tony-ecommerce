@@ -1,6 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
+import { useCart } from '../../contexts/CartContext';
+import { FaShoppingCart } from 'react-icons/fa';
 
 const HeaderContainer = styled.header`
   background-color: #fff;
@@ -28,23 +30,48 @@ const NavLinks = styled.div`
   gap: 2rem;
 `;
 
-const NavLink = styled(Link)`
-  color: #666;
-  text-decoration: none;
-  &:hover {
-    color: #007bff;
+const NavItem = styled.div`
+  a {
+    color: #666;
+    text-decoration: none;
+    &:hover {
+      color: #007bff;
+    }
   }
 `;
 
+const CartBadge = styled.span`
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background-color: ${props => props.theme.colors.danger};
+  color: white;
+  border-radius: 50%;
+  padding: 2px 6px;
+  font-size: 12px;
+`;
+
 function Header() {
+  const { cartItems } = useCart();
+  const cartItemCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+
   return (
     <HeaderContainer>
       <Nav>
-        <Logo to="/">Tony-Ecommerce</Logo>
+        <Logo to="/">Tony's Shop</Logo>
         <NavLinks>
-          <NavLink to="/products">商品</NavLink>
-          <NavLink to="/cart">購物車</NavLink>
-          <NavLink to="/login">登入</NavLink>
+          <NavItem>
+            <Link to="/products">商品列表</Link>
+          </NavItem>
+          <NavItem>
+            <Link to="/cart" style={{ position: 'relative' }}>
+              <FaShoppingCart />
+              {cartItemCount > 0 && <CartBadge>{cartItemCount}</CartBadge>}
+            </Link>
+          </NavItem>
+          <NavItem>
+            <Link to="/login">登入</Link>
+          </NavItem>
         </NavLinks>
       </Nav>
     </HeaderContainer>
