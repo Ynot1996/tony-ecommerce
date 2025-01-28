@@ -1,0 +1,47 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  frontend-test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: 設定 Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+        
+    - name: 安裝前端依賴
+      run: |
+        cd frontend
+        npm ci
+        
+    - name: 執行前端測試
+      run: |
+        cd frontend
+        npm run test
+        npm run build
+
+  backend-test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: 設定 Java
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        
+    - name: 執行後端測試
+      run: |
+        cd backend
+        ./mvnw verify 

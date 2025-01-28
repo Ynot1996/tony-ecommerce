@@ -1,0 +1,12 @@
+#!/bin/bash
+# .githooks/commit-msg
+
+commit_msg=$(cat "$1")
+commit_pattern="^(feat|fix|docs|style|refactor|test|chore):.{1,50}$"
+
+if ! [[ "$commit_msg" =~ $commit_pattern ]]; then
+    echo "提交信息格式錯誤！"
+    echo "請使用格式: <type>: <description>"
+    echo "類型包括: feat|fix|docs|style|refactor|test|chore"
+    exit 1
+fi 

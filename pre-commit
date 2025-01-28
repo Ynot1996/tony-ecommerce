@@ -1,0 +1,15 @@
+#!/bin/bash
+# .githooks/pre-commit
+
+echo "執行前端程式碼檢查..."
+cd frontend && npm run lint && npm run test
+
+echo "執行後端程式碼檢查..."
+cd ../backend && ./mvnw verify
+
+# 確保沒有直接提交到主分支
+branch="$(git rev-parse --abbrev-ref HEAD)"
+if [ "$branch" = "main" ]; then
+  echo "不允許直接提交到 main 分支"
+  exit 1
+fi 
