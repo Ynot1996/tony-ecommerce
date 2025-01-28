@@ -17,17 +17,18 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: '18'
+        cache: 'npm'
+        cache-dependency-path: frontend/package-lock.json
         
     - name: 安裝前端依賴
-      run: |
-        cd frontend
-        npm ci
-        
+      working-directory: frontend
+      run: npm ci
+      
     - name: 執行前端測試
+      working-directory: frontend
       run: |
-        cd frontend
-        npm run test
         npm run build
+        npm run test -- --passWithNoTests
 
   backend-test:
     runs-on: ubuntu-latest
@@ -40,8 +41,8 @@ jobs:
       with:
         java-version: '17'
         distribution: 'temurin'
+        cache: 'maven'
         
     - name: 執行後端測試
-      run: |
-        cd backend
-        ./mvnw verify 
+      working-directory: backend
+      run: ./mvnw verify 

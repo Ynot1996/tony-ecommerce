@@ -24,4 +24,17 @@ yarn-error.log*
 
 # OS
 .DS_Store
-Thumbs.db 
+Thumbs.db
+
+# Frontend
+frontend/node_modules
+frontend/build
+frontend/.env
+frontend/coverage
+frontend/.DS_Store
+
+# Backend
+backend/target
+backend/.mvn
+backend/*.log
+backend/.env 

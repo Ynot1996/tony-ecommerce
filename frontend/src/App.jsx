@@ -28,17 +28,21 @@ function App() {
     <ThemeProvider theme={theme}>
       <AuthProvider>
         <Router>
-          <Header />
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/products" element={<ProductList />} />
-            <Route path="/product/:id" element={<ProductDetail />} />
-            <Route path="/cart" element={<Cart />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/profile" element={<UserProfile />} />
-          </Routes>
-          <Footer />
+          <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+            <Header />
+            <main style={{ flex: 1 }}>
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/products" element={<ProductList />} />
+                <Route path="/product/:id" element={<ProductDetail />} />
+                <Route path="/cart" element={<Cart />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
+                <Route path="/profile" element={<UserProfile />} />
+              </Routes>
+            </main>
+            <Footer />
+          </div>
         </Router>
       </AuthProvider>
     </ThemeProvider>
