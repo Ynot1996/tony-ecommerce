@@ -2,6 +2,7 @@
   "name": "tony-ecommerce-frontend",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://[your-username].github.io/tony-ecommerce/",
   "dependencies": {
     "react-icons": "^4.12.0",
     "@testing-library/jest-dom": "^5.17.0",
