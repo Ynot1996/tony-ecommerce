@@ -30,7 +30,7 @@ function App() {
     <ThemeProvider theme={theme}>
       <AuthProvider>
         <CartProvider>
-          <Router>
+          <Router basename="/tony-ecommerce">
             <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
               <Toaster position="top-right" />
               <Header />
