@@ -24,12 +24,18 @@ public class CartController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<CartItem> addToCart(
+    public ResponseEntity<?> addToCart(
             @AuthenticationPrincipal UserDetails userDetails,
             @RequestParam Long productId,
-            @RequestParam Integer quantity) {
-        Long userId = userService.findByUsername(userDetails.getUsername()).getId();
-        return ResponseEntity.ok(cartService.addToCart(userId, productId, quantity));
+            @RequestParam Integer quantity
+    ) {
+        try {
+            Long userId = userService.findByUsername(userDetails.getUsername()).getId();
+            CartItem cartItem = cartService.addToCart(userId, productId, quantity);
+            return ResponseEntity.ok(cartItem);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @PutMapping("/update")

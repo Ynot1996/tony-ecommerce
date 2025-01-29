@@ -1,8 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../../contexts/CartContext';
-import { FaShoppingCart } from 'react-icons/fa';
+import { useAuth } from '../../contexts/AuthContext';
+import { FaShoppingCart, FaUser } from 'react-icons/fa';
 
 const HeaderContainer = styled.header`
   background-color: #fff;
@@ -51,9 +52,43 @@ const CartBadge = styled.span`
   font-size: 12px;
 `;
 
+const UserMenu = styled.div`
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+`;
+
+const Button = styled.button`
+  padding: 0.8rem;
+  background-color: ${props => props.theme.colors.primary};
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  
+  &:hover {
+    background-color: ${props => props.theme.colors.primary}dd;
+  }
+  
+  &:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+`;
+
 function Header() {
   const { cartItems } = useCart();
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
   const cartItemCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
 
   return (
     <HeaderContainer>
@@ -69,9 +104,22 @@ function Header() {
               {cartItemCount > 0 && <CartBadge>{cartItemCount}</CartBadge>}
             </Link>
           </NavItem>
-          <NavItem>
-            <Link to="/login">登入</Link>
-          </NavItem>
+          {user ? (
+            <UserMenu>
+              <NavItem>
+                <Link to="/profile">
+                  <FaUser /> {user.username}
+                </Link>
+              </NavItem>
+              <NavItem>
+                <Button onClick={handleLogout}>登出</Button>
+              </NavItem>
+            </UserMenu>
+          ) : (
+            <NavItem>
+              <Link to="/login">登入</Link>
+            </NavItem>
+          )}
         </NavLinks>
       </Nav>
     </HeaderContainer>

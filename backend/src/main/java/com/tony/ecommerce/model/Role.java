@@ -12,11 +12,6 @@ public class Role {
     private Long id;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(length = 20)
     private ERole name;
 }
-
-public enum ERole {
-    ROLE_USER,
-    ROLE_ADMIN
-} 

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useCart } from '../../contexts/CartContext';
 import { mockProducts } from '../../utils/mockData';
 
@@ -45,8 +45,10 @@ const QuantityControl = styled.div`
 
 function ProductDetail() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const { addToCart } = useCart();
   const [quantity, setQuantity] = useState(1);
+  const [loading, setLoading] = useState(false);
 
   const product = mockProducts.find(p => p.id === parseInt(id)) || {
     name: "商品名稱",
@@ -55,8 +57,18 @@ function ProductDetail() {
     image: "https://picsum.photos/400/400?random=" + id
   };
 
-  const handleAddToCart = () => {
-    addToCart(product.id, quantity);
+  const handleAddToCart = async () => {
+    setLoading(true);
+    try {
+      const result = await addToCart(id, quantity);
+      if (result.needLogin) {
+        navigate('/login');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -74,7 +86,12 @@ function ProductDetail() {
             <span>{quantity}</span>
             <button onClick={() => setQuantity(q => q + 1)}>+</button>
           </QuantityControl>
-          <Button onClick={handleAddToCart}>加入購物車</Button>
+          <Button 
+            onClick={handleAddToCart} 
+            disabled={loading}
+          >
+            {loading ? '加入中...' : '加入購物車'}
+          </Button>
         </ProductDetails>
       </ProductInfo>
     </ProductDetailContainer>

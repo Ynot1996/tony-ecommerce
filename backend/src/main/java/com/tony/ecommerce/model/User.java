@@ -1,11 +1,13 @@
 package com.tony.ecommerce.model;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import java.util.HashSet;
 import java.util.Set;
 
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "users")
 public class User {
@@ -13,10 +15,10 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    @Column(nullable = false, unique = true)
+    @Column(unique = true, nullable = false)
     private String username;
     
-    @Column(nullable = false, unique = true)
+    @Column(unique = true, nullable = false)
     private String email;
     
     @Column(nullable = false)

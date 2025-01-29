@@ -7,12 +7,13 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class SwaggerConfig {
+
     @Bean
-    public OpenAPI openAPI() {
+    public OpenAPI customOpenAPI() {
         return new OpenAPI()
                 .info(new Info()
-                        .title("Tony-Ecommerce API")
-                        .description("電商平台 API 文檔")
-                        .version("1.0"));
+                        .title("E-commerce API")
+                        .version("1.0")
+                        .description("API documentation for the E-commerce application"));
     }
 } 

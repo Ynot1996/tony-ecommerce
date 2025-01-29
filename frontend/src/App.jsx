@@ -13,6 +13,8 @@ import Cart from './pages/Cart';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import UserProfile from './pages/UserProfile';
+import Admin from './pages/Admin';
+import ProtectedRoute from './components/ProtectedRoute';
 
 const theme = {
   colors: {
@@ -30,7 +32,7 @@ function App() {
     <ThemeProvider theme={theme}>
       <AuthProvider>
         <CartProvider>
-          <Router basename="/tony-ecommerce">
+          <Router>
             <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
               <Toaster position="top-right" />
               <Header />
@@ -43,6 +45,11 @@ function App() {
                   <Route path="/login" element={<Login />} />
                   <Route path="/register" element={<Register />} />
                   <Route path="/profile" element={<UserProfile />} />
+                  <Route path="/admin" element={
+                    <ProtectedRoute roles={['ROLE_ADMIN']}>
+                      <Admin />
+                    </ProtectedRoute>
+                  } />
                 </Routes>
               </main>
               <Footer />
