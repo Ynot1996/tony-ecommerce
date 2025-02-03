@@ -1,8 +1,7 @@
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { FaTrash, FaMinus, FaPlus } from 'react-icons/fa';
-import { useCart } from '../../contexts/CartContext';
-import { useNavigate } from 'react-router-dom';
+import { mockCartItems } from '../../utils/mockData';
 
 const CartContainer = styled.div`
   max-width: 1200px;
