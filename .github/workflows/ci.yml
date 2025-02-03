@@ -13,21 +13,20 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     
-    - name: 設定 Node.js
+    - name: Set up Node.js
       uses: actions/setup-node@v3
       with:
         node-version: '18'
+        cache: 'npm'
+        cache-dependency-path: frontend/package-lock.json
         
-    - name: 安裝前端依賴
-      run: |
-        cd frontend
-        npm ci
-        
-    - name: 執行前端測試
-      run: |
-        cd frontend
-        npm run test
-        npm run build
+    - name: Install dependencies
+      working-directory: frontend
+      run: npm ci
+      
+    - name: Run tests
+      working-directory: frontend
+      run: npm run test
 
   backend-test:
     runs-on: ubuntu-latest
@@ -35,13 +34,13 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     
-    - name: 設定 Java
+    - name: Set up JDK 17
       uses: actions/setup-java@v3
       with:
         java-version: '17'
         distribution: 'temurin'
+        cache: 'maven'
         
-    - name: 執行後端測試
-      run: |
-        cd backend
-        ./mvnw verify 
+    - name: Build and test
+      working-directory: backend
+      run: mvn verify 

@@ -1,6 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useCart } from '../../contexts/CartContext';
+import { useAuth } from '../../contexts/AuthContext';
+import { FaShoppingCart, FaUser } from 'react-icons/fa';
 
 const HeaderContainer = styled.header`
   background-color: #fff;
@@ -28,23 +31,95 @@ const NavLinks = styled.div`
   gap: 2rem;
 `;
 
-const NavLink = styled(Link)`
-  color: #666;
-  text-decoration: none;
+const NavItem = styled.div`
+  a {
+    color: #666;
+    text-decoration: none;
+    &:hover {
+      color: #007bff;
+    }
+  }
+`;
+
+const CartBadge = styled.span`
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background-color: ${props => props.theme.colors.danger};
+  color: white;
+  border-radius: 50%;
+  padding: 2px 6px;
+  font-size: 12px;
+`;
+
+const UserMenu = styled.div`
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+`;
+
+const Button = styled.button`
+  padding: 0.8rem;
+  background-color: ${props => props.theme.colors.primary};
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  
   &:hover {
-    color: #007bff;
+    background-color: ${props => props.theme.colors.primary}dd;
+  }
+  
+  &:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
   }
 `;
 
 function Header() {
+  const { cartItems } = useCart();
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+  const cartItemCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
+
   return (
     <HeaderContainer>
       <Nav>
-        <Logo to="/">Tony-Ecommerce</Logo>
+        <Logo to="/">Tony's Shop</Logo>
         <NavLinks>
-          <NavLink to="/products">商品</NavLink>
-          <NavLink to="/cart">購物車</NavLink>
-          <NavLink to="/login">登入</NavLink>
+          <NavItem>
+            <Link to="/products">商品列表</Link>
+          </NavItem>
+          <NavItem>
+            <Link to="/cart" style={{ position: 'relative' }}>
+              <FaShoppingCart />
+              {cartItemCount > 0 && <CartBadge>{cartItemCount}</CartBadge>}
+            </Link>
+          </NavItem>
+          {user ? (
+            <UserMenu>
+              <NavItem>
+                <Link to="/profile">
+                  <FaUser /> {user.username}
+                </Link>
+              </NavItem>
+              <NavItem>
+                <Button onClick={handleLogout}>登出</Button>
+              </NavItem>
+            </UserMenu>
+          ) : (
+            <NavItem>
+              <Link to="/login">登入</Link>
+            </NavItem>
+          )}
         </NavLinks>
       </Nav>
     </HeaderContainer>
