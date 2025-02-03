@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { FaSearch } from '@react-icons/all-files/fa/FaSearch';
+import { FaSearch } from 'react-icons/fa';
 
 const SearchContainer = styled.div`
   position: relative;

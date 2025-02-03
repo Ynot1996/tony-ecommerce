@@ -1,2 +1,0 @@
-mkdir -p frontend/src/{components,pages,services,utils,assets,hooks,contexts}
-mkdir -p backend/src/main/java/com/tony/ecommerce/{controller,service,repository,model,config,security} 

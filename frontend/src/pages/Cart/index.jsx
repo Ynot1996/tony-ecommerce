@@ -1,8 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { FaTrash } from '@react-icons/all-files/fa/FaTrash';
-import { FaMinus } from '@react-icons/all-files/fa/FaMinus';
-import { FaPlus } from '@react-icons/all-files/fa/FaPlus';
+import { FaTrash, FaMinus, FaPlus } from 'react-icons/fa';
 import { mockCartItems } from '../../utils/mockData';
 
 const CartContainer = styled.div`
