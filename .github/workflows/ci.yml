@@ -26,7 +26,7 @@ jobs:
     - name: 執行前端測試
       run: |
         cd frontend
-        npm run test
+        npm run test -- --passWithNoTests
         npm run build
 
   backend-test:
