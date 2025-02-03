@@ -45,6 +45,7 @@ function Header() {
           <NavLink to="/products">商品</NavLink>
           <NavLink to="/cart">購物車</NavLink>
           <NavLink to="/login">登入</NavLink>
+          <NavLink to="/register">註冊</NavLink>
         </NavLinks>
       </Nav>
     </HeaderContainer>
