@@ -61,6 +61,7 @@ function ProductDetail() {
         </ProductDetails>
       </ProductInfo>
     </ProductDetailContainer>
+
   );
 }
 
