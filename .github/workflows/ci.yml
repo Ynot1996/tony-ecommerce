@@ -19,13 +19,12 @@ jobs:
         node-version: '18'
         
     - name: 安裝前端依賴
-      run: |
-        cd frontend
-        npm ci
-        
+      working-directory: ./frontend  
+      run: npm ci
+      
     - name: 執行前端測試
+      working-directory: ./frontend 
       run: |
-        cd frontend
         npm run test -- --passWithNoTests
         npm run build
 
@@ -41,7 +40,10 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
         
+    - name: Grant Execute Permission to mvnw  
+      working-directory: ./backend           
+      run: chmod +x ./mvnw
+  
     - name: 執行後端測試
-      run: |
-        cd backend
-        ./mvnw verify 
+      working-directory: ./backend         
+      run: ./mvnw verify 
