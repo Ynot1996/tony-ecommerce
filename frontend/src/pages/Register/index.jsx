@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
+import axios from 'axios';
 
 const RegisterContainer = styled.div`
   max-width: 400px;
@@ -31,14 +32,66 @@ const Button = styled.button`
 `;
 
 function Register() {
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [error, setError] = useState('');
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (password !== confirmPassword) {
+      setError('密碼不匹配');
+      return;
+    }
+
+    try {
+      const response = await axios.post('http://localhost:8080/api/auth/register', {
+        username,
+        email,
+        password,
+      });
+      console.log('註冊成功:', response.data);
+    } catch (err) {
+      console.error('註冊失敗:', err.response.data);
+      setError(err.response.data || '註冊失敗，請稍後再試');
+    }
+  };
+
   return (
     <RegisterContainer>
       <h2>註冊</h2>
-      <Form>
-        <Input type="text" placeholder="使用者名稱" />
-        <Input type="email" placeholder="電子郵件" />
-        <Input type="password" placeholder="密碼" />
-        <Input type="password" placeholder="確認密碼" />
+      {error && <p style={{ color: 'red' }}>{error}</p>}
+      <Form onSubmit={handleSubmit}>
+        <Input
+          type="text"
+          placeholder="使用者名稱"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          required
+        />
+        <Input
+          type="email"
+          placeholder="電子郵件"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
+        <Input
+          type="password"
+          placeholder="密碼"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
+        <Input
+          type="password"
+          placeholder="確認密碼"
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+          required
+        />
         <Button type="submit">註冊</Button>
       </Form>
     </RegisterContainer>
