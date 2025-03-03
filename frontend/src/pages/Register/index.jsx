@@ -52,10 +52,11 @@ function Register() {
         email,
         password,
       });
-      console.log('註冊成功:', response.data);
+      console.log('註冊成功:', response.data.message);
+      setError('');
     } catch (err) {
-      console.error('註冊失敗:', err.response.data);
-      setError(err.response.data || '註冊失敗，請稍後再試');
+      console.error('註冊失敗:', err.response?.data?.error);
+      setError(err.response?.data?.error || '註冊失敗，請稍後再試');
     }
   };
 
